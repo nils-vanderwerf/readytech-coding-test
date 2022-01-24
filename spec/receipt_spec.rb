@@ -1,17 +1,33 @@
-require 'receipt'
+require_relative '../lib/receipt'
 
-RSpec.describe Receipt do
-    receipt = Receipt.new("Nils")
-    context "greeting method is called with a name" do 
-        it "greets someone with 'Hello there!' and their name" do
-            expect(receipt.greeting).to eq("Hello there, #{receipt.name}!")
-        end
-    end
+RSpec.describe Receipt  do
+#  A row separator delimits table rows. A common row separator is the newline character "\n".
+#  A column separator delimits fields in a row. A common column separator is the comma character ","
+#  Source https://ruby-doc.org/stdlib-3.0.0/libdoc/csv/rdoc/CSV.html
+    
+    it 'prints the receipt details for a shopping basket' do
+        input1 = "Quantity, Product, Price\n1, book, 12.49\n1, music cd, 14.99\n1, chocolate bar, 0.85"
+        input2 = [
+            ["Quantity", "Product", "Price"],
+            ["1", 'imported box of chocolates', "10.00"],
+            ["1", 'imported bottle of perfume', "47.50"]
+        ]
 
-    context "goodbye method is called with a name" do 
-        it "Says 'Goodbye!' to someone with their name" do
-            expect(receipt.salutation).to eq("Goodbye, #{receipt.name}!")
-        end
+        input3 = [
+            ["Quantity", "Product", "Price"], 
+            ["1", 'imported bottle of perfume', "27.99"],
+            ["1", 'bottle of perfume', "18.99"],
+            ["1", 'packet of headache pills', "9.75"],
+            ["1", 'box of imported chocolates', "11.25"]
+        ]
+
+
+        receipt1 = Receipt.new(input1)
+        receipt2 = Receipt.new(input2)
+        receipt3 = Receipt.new(input3)
+        expect (receipt1.csv_export).to eq("boss")
+        expect (receipt2.csv_export).to eq("boss")
+        expect (receipt2.csv_export).to eq("boss")
     end
 end
 
