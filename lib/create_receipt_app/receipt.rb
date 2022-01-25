@@ -15,4 +15,12 @@ class Receipt
             end
         end
     end
+
+    def calculate_sales_tax
+        running_sales_tax = []
+        @order.each do |product|
+            running_sales_cd tax << product.last
+            puts running_sales_tax
+        end
+    end
 end
