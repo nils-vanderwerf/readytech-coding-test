@@ -1,12 +1,14 @@
 class ShoppingBasket
-    attr_reader :order
+    attr_reader :data
 
-    def initialize(order)
-        # Method CSV.parse returns the entire CSV data:
-        @order = CSV.read(order)
+    def initialize(path)
+        # reads the file, removing unnecessary charracters
+        @data = File.read(path).gsub(/\rn?/, "")
     end
 
+    
     def read_data
-        @order
+        @data
     end
+
 end
