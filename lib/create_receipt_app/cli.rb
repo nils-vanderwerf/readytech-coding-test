@@ -1,9 +1,10 @@
 class GetPurchaseItems
 
-    attr_accessor :shopping_basket
+    attr_accessor :shopping_basket, :parsed_data
 
     def initialize
         @shopping_basket = []
+        @parsed_data = []
     end 
 
     def call
@@ -47,6 +48,7 @@ class GetPurchaseItems
         confirmation = gets.strip.downcase
         if confirmation === "y"
             puts "Loading receipt"
+            read_line_items
             generate_receipt
         elsif confirmation === "n"
             puts "Ok, lets try again. Please enter the path for your shopping cart file"
@@ -54,14 +56,21 @@ class GetPurchaseItems
         else 
             puts "Invalid input"
         end
+    end
 
+    def read_line_items
+        @parsed_data = CSV.parse(@shopping_basket)
+        # Drop header
+        @parsed_data = @parsed_data.drop(1)
+        # Create a new line item instance for each line item
+        @parsed_data.each do |line_item|
+            LineItem.new(line_item)
+        end
+        puts "PARSED: #{@parsed_data}"
     end
 
     def generate_receipt
-        parsed_data = CSV.parse(@shopping_basket)
-        puts "PARSED: #{parsed_data}"
-        receipt = Receipt.new(@shopping_basket)
-        receipt.csv_export
+        receipt = Receipt.new(@parsed_data)
     end
 
 end
