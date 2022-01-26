@@ -5,7 +5,7 @@ class Receipt
 
     def initialize(order)
         # Method CSV.parse returns the entire CSV data, drops header
-        @order = order.drop(1)
+        @order = order
     end
 
     def csv_export
@@ -16,5 +16,9 @@ class Receipt
         end
     end
 
-    
+    def output_display
+        @order.each do |row|
+            puts row
+        end
+    end    
 end

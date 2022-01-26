@@ -5,6 +5,7 @@ class GetPurchaseItems
     def initialize
         @shopping_basket = []
         @parsed_data = []
+        @output = []
     end 
 
     def call
@@ -19,6 +20,12 @@ class GetPurchaseItems
 
     def user_input
         # Input is path of shopping cart file
+         #reset line items class values to 0, so they don't keep incrementing
+         puts "BEFORE:", LineItem.all
+         if !LineItem.all.empty?
+            LineItem.all.map {|instance| instance.delete_instance }
+         end
+         puts "AFTER:", LineItem.all
         puts "Please enter the path for your shopping cart file"
         input = nil
         while input != "quit"
@@ -38,6 +45,7 @@ class GetPurchaseItems
             confirm_order
         elsif input != 'quit'
             puts "Oops! We couldn't find this file. Please try again."
+            user_input
         end
     end
 
@@ -45,12 +53,14 @@ class GetPurchaseItems
         puts @shopping_basket
         confirmation = nil
         puts "Confirm order? Y/N"
-        confirmation = gets.strip.downcase
-        if confirmation === "y"
+        confirmation = gets.strip
+        if confirmation === "y" || confirmation === "Y"
             puts "Loading receipt"
+            puts "............"
+            puts ""
             read_line_items
             generate_receipt
-        elsif confirmation === "n"
+        elsif confirmation === "n" || confirmation === "N"
             puts "Ok, lets try again. Please enter the path for your shopping cart file"
             user_input
         else 
@@ -59,18 +69,28 @@ class GetPurchaseItems
     end
 
     def read_line_items
-        @parsed_data = CSV.parse(@shopping_basket)
-        # Drop header
-        @parsed_data = @parsed_data.drop(1)
+        @parsed_data = CSV.parse(@shopping_basket, :headers => true)
         # Create a new line item instance for each line item
         @parsed_data.each do |line_item|
-            new_line_item = LineItem.new(line_item)
+            item = LineItem.new(line_item)
+            @output << [item.quantity, item.product, item.item_cost]
         end
-        puts "PARSED: #{@parsed_data}"
+        add_items_to_output
+    end
+    
+    def add_items_to_output
+        sum = LineItem.sum_all
+        sales_tax = LineItem.sales_tax
+        @output << ["\n"]
+        @output << ["Sales Tax", sales_tax ]
+        @output << ["Total:", sum]
+
     end
 
     def generate_receipt
-        receipt = Receipt.new(@parsed_data)
+        receipt = Receipt.new(@output)
+        receipt.csv_export
+        receipt.output_display
     end
 
 end
