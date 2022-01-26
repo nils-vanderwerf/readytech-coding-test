@@ -64,7 +64,7 @@ class GetPurchaseItems
         @parsed_data = @parsed_data.drop(1)
         # Create a new line item instance for each line item
         @parsed_data.each do |line_item|
-            LineItem.new(line_item)
+            new_line_item = LineItem.new(line_item)
         end
         puts "PARSED: #{@parsed_data}"
     end
