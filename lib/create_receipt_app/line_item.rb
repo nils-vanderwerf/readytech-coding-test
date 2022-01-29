@@ -1,3 +1,5 @@
+require 'rounding'
+
 class LineItem
 
     attr_reader :quantity, :product, :item_cost
@@ -16,14 +18,15 @@ class LineItem
         @@all << self
         @quantity = row[0].to_i
         @product = row[1]
-        @price = row[2].to_f
+        @price = row[2].to_d
+        
         @tax_amount = self.calculate_tax
-        @item_cost = (@price + @tax_amount).floor(2)
+        puts "PRODUCT", @product, "TAX AMOUNT", @tax_amount
+        @item_cost = (@price + @tax_amount).round(2)
         # add tax amount to toal sales amount for this class
         @@sales_tax += @tax_amount
         # add item cost to sum
-        @@sum += @quantity * @item_cost.round(2)
-
+        @@sum += (@quantity * @item_cost).round(2)
     end
 
     def self.all
@@ -41,6 +44,7 @@ class LineItem
     def calculate_tax
         #p is price, n is tax amount, total is np/100 rounded to the nearest 0.05
         p = @price
+        n = 10
 
         if !self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
            n = 0
@@ -49,10 +53,10 @@ class LineItem
         elsif self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
            n = 5
         else 
-           n = 10
+            n=10
         end
 
-        @tax_amount = ( p * n/100 * 20 ).round(2) / 20
+        @tax_amount = (p * n/100 *20).ceil.to_d/20.0
         @tax_amount
     end
 
