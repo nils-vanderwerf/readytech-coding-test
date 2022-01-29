@@ -6,24 +6,17 @@ class LineItem
     @@sales_tax = 0
     @@sum = 0
 
-    @@exempt_items = {
-        food: ["chocolate"],
-        books: ["book"],
-        medical: ["packet of headache pills"]
-    }
-
     def initialize(row)
         @@all << self
         @quantity = row[0].to_i
         @product = row[1]
         @price = row[2].to_f
         @tax_amount = self.calculate_tax
-        @item_cost = (@price + @tax_amount).floor(2)
+        @item_cost = (@price + @tax_amount).round(2)
         # add tax amount to toal sales amount for this class
         @@sales_tax += @tax_amount
-        # add item cost to sum
-        @@sum += @quantity * @item_cost.round(2)
-
+        # add item cost to sum 
+        @@sum += (@quantity * @item_cost).round(2)
     end
 
     def self.all
@@ -52,27 +45,34 @@ class LineItem
            n = 10
         end
 
-        @tax_amount = ( p * n/100 * 20 ).round(2) / 20
+        #round to the nearest 0.05. 1/20 is .05
+        @tax_amount = (p * n/100 * 20).round/20.0
         @tax_amount
     end
 
+    private 
+
     def is_food_product?
-       @@exempt_items[:food].any? {|i| @product.include?(i)}
+        exempt_items[:food].any? {|i| @product.include?(i)}
     end
-
+ 
     def is_book?
-        @@exempt_items[:books].any? {|i| @product.include?(i)}
+       exempt_items[:books].any? {|i| @product.include?(i)}
     end
-
+ 
     def is_medical_product?
-        @@exempt_items[:medical].any? {|i| @product.include?(i)}
+    exempt_items[:medical].any? {|i| @product.include?(i)}
     end
-
+ 
     def is_imported?
         @product.include? "imported"
     end
 
-    def delete_instance
-        self.delete_all
+    def exempt_items
+       {
+            food: ["chocolate"],
+            books: ["book"],
+            medical: ["packet of headache pills"]
+        }
     end
 end

@@ -21,11 +21,9 @@ class GetPurchaseItems
     def user_input
         # Input is path of shopping cart file
          #reset line items class values to 0, so they don't keep incrementing
-         puts "BEFORE:", LineItem.all
          if !LineItem.all.empty?
             LineItem.all.map {|instance| instance.delete_instance }
          end
-         puts "AFTER:", LineItem.all
         puts "Please enter the path for your shopping cart file"
         input = nil
         while input != "quit"
@@ -83,7 +81,7 @@ class GetPurchaseItems
         sales_tax = LineItem.sales_tax
         @output << ["\n"]
         @output << ["Sales Tax", sales_tax ]
-        @output << ["Total:", sum]
+        @output << ["Total", sum]
 
     end
 

@@ -17,8 +17,13 @@ class Receipt
     end
 
     def output_display
+        print_condition = 
         @order.each do |row|
-            puts row
+            if row.include?("Sales Tax") || row.include?("Total")
+                puts row.join(": ")
+            else 
+                puts row.join(", ")
+            end
         end
     end    
 end
