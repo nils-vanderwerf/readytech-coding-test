@@ -1,6 +1,7 @@
-1,imported box of chocolates,0.105e2
-1,imported bottle of perfume ,0.5465e2
+1,book,12.49
+1,music cd,16.49
+1,chocolate bar,0.85
 "
 "
-Sales Tax,0.765e1
-Total:,0.6515e2
+Sales Tax,1.5
+Total:,29.83
