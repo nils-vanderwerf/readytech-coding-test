@@ -3,4 +3,5 @@
 
 require './lib/create_receipt_app'
 
-GetPurchaseItems.new.call
+#executable for cli
+CLI.new.call

@@ -1,6 +1,6 @@
-class GetPurchaseItems
+class CLI
 
-    attr_accessor :shopping_basket, :parsed_data
+    attr_accessor :shopping_basket, :parsed_data, :output
 
     def initialize
         @shopping_basket = []
@@ -22,7 +22,10 @@ class GetPurchaseItems
         # Input is path of shopping cart file
          #reset line items class values to 0, so they don't keep incrementing
          if !LineItem.all.empty?
-            LineItem.all.map {|instance| instance.delete_instance }
+            LineItem.all.map do |instance| 
+                LineItem.find_by(product: instance.product).destroy 
+            end
+            puts LineItem.all
          end
         puts "Please enter the path for your shopping cart file"
         input = nil
@@ -71,7 +74,7 @@ class GetPurchaseItems
         # Create a new line item instance for each line item
         @parsed_data.each do |line_item|
             item = LineItem.new(line_item)
-            @output << [item.quantity, item.product, item.item_cost]
+            @output << [item.quantity, item.product, item.price_inc_tax]
         end
         add_items_to_output
     end
@@ -79,10 +82,10 @@ class GetPurchaseItems
     def add_items_to_output
         sum = LineItem.sum_all
         sales_tax = LineItem.sales_tax
+        # Line break
         @output << ["\n"]
-        @output << ["Sales Tax", sales_tax ]
+        @output << ["Sales Tax", sales_tax]
         @output << ["Total", sum]
-
     end
 
     def generate_receipt

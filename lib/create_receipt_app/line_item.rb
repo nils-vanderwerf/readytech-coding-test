@@ -1,6 +1,6 @@
 class LineItem
 
-    attr_reader :quantity, :product, :item_cost
+    attr_reader :quantity, :product, :price, :price_inc_tax
 
     @@all = []
     @@sales_tax = 0
@@ -12,11 +12,11 @@ class LineItem
         @product = row[1]
         @price = row[2].to_f
         @tax_amount = self.calculate_tax
-        @item_cost = (@price + @tax_amount).round(2)
+        @price_inc_tax = (@price + @tax_amount).round(2)
         # add tax amount to toal sales amount for this class
         @@sales_tax += @tax_amount
         # add item cost to sum 
-        @@sum += (@quantity * @item_cost).round(2)
+        @@sum += (@quantity * @price_inc_tax).round(2)
     end
 
     def self.all
@@ -61,7 +61,7 @@ class LineItem
     end
  
     def is_medical_product?
-    exempt_items[:medical].any? {|i| @product.include?(i)}
+        exempt_items[:medical].any? {|i| @product.include?(i)}
     end
  
     def is_imported?
