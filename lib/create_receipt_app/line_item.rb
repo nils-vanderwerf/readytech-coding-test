@@ -6,11 +6,11 @@ class LineItem
     @@sales_tax = 0
     @@sum = 0
 
-    def initialize(row)
+    def initialize quantity = nil, product, price
         @@all << self
-        @quantity = row[0].to_i
-        @product = row[1]
-        @price = row[2].to_f
+        @quantity = quantity
+        @product = product
+        @price = price
         @tax_amount = self.calculate_tax
         @price_inc_tax = (@price + @tax_amount).round(2)
         # add tax amount to toal sales amount for this class
@@ -43,8 +43,7 @@ class LineItem
            n = 5
         else 
            n = 10
-        end
-
+        end        
         #round to the nearest 0.05. 1/20 is .05
         @tax_amount = (p * n/100 * 20).round/20.0
         @tax_amount

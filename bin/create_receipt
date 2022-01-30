@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-
-require './lib/create_receipt_app'
+require_relative '../lib/create_receipt_app'
 
 #executable for cli
 CLI.new.call

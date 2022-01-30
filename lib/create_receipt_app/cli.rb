@@ -73,7 +73,10 @@ class CLI
         @parsed_data = CSV.parse(@shopping_basket, :headers => true)
         # Create a new line item instance for each line item
         @parsed_data.each do |line_item|
-            item = LineItem.new(line_item)
+            quantity = line_item[0].to_i
+            product = line_item[1]
+            price = line_item[2].to_f
+            item = LineItem.new(quantity, product, price)
             @output << [item.quantity, item.product, item.price_inc_tax]
         end
         add_items_to_output
