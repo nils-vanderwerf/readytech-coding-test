@@ -8,8 +8,11 @@ class ShoppingBasket
 
     
     def read_data
-        puts @data
         @data
+    end
+
+    def parsed_data 
+        CSV.parse(@data, :headers => true)
     end
 
 end

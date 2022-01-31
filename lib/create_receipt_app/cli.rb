@@ -1,10 +1,9 @@
 class CLI
 
-    attr_accessor :shopping_basket, :parsed_data, :output
+    attr_accessor :shopping_basket, :output
 
     def initialize
         @shopping_basket = []
-        @parsed_data = []
         @output = []
     end 
 
@@ -36,6 +35,7 @@ class CLI
             LineItem.all.map do |instance| 
                 LineItem.find_by(product: instance.product).destroy 
             end
+
          end
     end
 
@@ -45,7 +45,7 @@ class CLI
             puts ""
             puts "File Found"
             puts ""
-            @shopping_basket = ShoppingBasket.new(path).read_data
+            @shopping_basket = ShoppingBasket.new(path)
             confirm_order
         elsif input != 'quit'
             puts "Oops! We couldn't find this file. Please try again."
@@ -54,7 +54,7 @@ class CLI
     end
 
     def confirm_order
-        puts @shopping_basket
+        puts @shopping_basket.read_data
         confirmation = nil
         puts "Confirm order? Y/N"
         confirmation = gets.strip
@@ -73,9 +73,9 @@ class CLI
     end
 
     def read_line_items
-        @parsed_data = CSV.parse(@shopping_basket, :headers => true)
+        parsed_data = @shopping_basket.parsed_data
         # Create a new line item instance for each line item
-        @parsed_data.each do |line_item|
+        parsed_data.each do |line_item|
             quantity = line_item[0].to_i
             product = line_item[1]
             price = line_item[2].to_f
