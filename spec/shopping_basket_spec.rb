@@ -15,24 +15,47 @@ RSpec.describe ShoppingBasket do
         basket2_parsed = basket2.parsed_data
         basket2_parsed = basket3.parsed_data
 
-        headers = ["Quantity", "Product", "Price"]
+        # basket1_expected = [
+        #     ["1", "book", "12.49"],
+        #     ["1", "music cd", "14.99"],
+        #     ["1", "chocolate bar", "0.85"]
+        # ]
+        # basket2_expected = [
+        #     ["1", "imported box of chocolates", "10.00"],
+        #     ["1", "imported bottle of perfume", "47.50"]
+        # ]
+        # basket3_expected = [
+        #     ["1", "imported bottle of perfume", "27.99"],
+        #     ["1", "bottle of perfume", "18.99"],
+        #     ["1", "packet of headache pills", "9.75"],
+        #     ["1", "box of imported chocolates", "11.25"]
+    
+        # # LOOP THROUGH EACH ROW OF EACH COLUMN OF TEST BASKET 1 TO CHECK PARSED DATA
+        # basket1.parsed_data.each_with_index do |row, index|
+        #     row.each_with_index do |column, inner_index|
+        #         puts basket1.parsed_data[index][inner_index]
+        #         puts basket1_expected[index][inner_index]
+        #         expect(basket1.parsed_data[index][inner_index]).to eq(basket1_expected[index][inner_index])
+        #     end
+        # end
 
-        basket1_expected = [
-            ["1", "book", "12.49"],
-            ["1", "music cd", "14.99"],
-            ["1", "chocolate bar", "0.85"]
-        ]
-        basket2_expected = [
-            ["1", "imported box of chocolates", "10.00"],
-            ["1", "imported bottle of perfume", "47.50"]
-        ]
-        basket3_expected = [
-            ["1", "imported bottle of perfume", "27.99"],
-            ["1", "bottle of perfume", "18.99"],
-            ["1", "packet of headache pills", "9.75"],
-            ["1", "box of imported chocolates", "11.25"]
-        ]
-        # BASKET 1
+        # # LOOP THROUGH EACH ROW OF EACH COLUMN OF TEST BASKET 2 TO CHECK PARSED DATA
+        # basket2.parsed_data.each_with_index do |row, index|
+        #     row.each_with_index do |column, inner_index|
+        #         puts basket2.parsed_data[index][inner_index]
+        #         puts basket2_expected[index][inner_index]
+        #         expect(basket2.parsed_data[index][inner_index]).to eq(basket2_expected[index][inner_index])
+        #     end
+        # end
+
+        #    # LOOP THROUGH EACH ROW OF EACH COLUMN OF TEST BASKET 2 TO CHECK PARSED DATA
+        #    basket3.parsed_data.each_with_index do |row, index|
+        #     row.each_with_index do |column, inner_index|
+        #         puts basket3.parsed_data[index][inner_index]
+        #         puts basket3_expected[index][inner_index]
+        #         expect(basket3.parsed_data[index][inner_index]).to eq(basket3_expected[index][inner_index].floor)
+        #     end
+        # end
 
         expect(basket1.parsed_data[0]["Quantity"]).to eq("1")
         expect(basket1.parsed_data[0]["Product"]).to eq("book")
