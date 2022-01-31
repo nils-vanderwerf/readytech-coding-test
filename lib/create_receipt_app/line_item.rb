@@ -1,6 +1,6 @@
 class LineItem
-
-    attr_reader :quantity, :product, :price, :price_inc_tax
+    attr_reader :quantity, :product, :price, :price_inc_tax, :is_imported, :is_tax_exempt
+     
 
     @@all = []
     @@sales_tax = 0
@@ -11,6 +11,8 @@ class LineItem
         @quantity = quantity
         @product = product
         @price = price
+        @is_tax_exempt = self.is_tax_exempt?
+        @is_imported = self.is_imported?
         @tax_amount = self.calculate_tax
         @price_inc_tax = (@price + @tax_amount).round(2)
         # add tax amount to toal sales amount for this class
@@ -29,27 +31,26 @@ class LineItem
 
     def self.sum_all
         @@sum
-    end
+    end 
 
     def calculate_tax
-        #p is price, n is tax amount, total is np/100 rounded to the nearest 0.05
-        p = @price
-
-        if !self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
-           n = 0
-        elsif self.is_imported? && !(self.is_food_product? || self.is_book? || self.is_medical_product?)
-            n = 15
-        elsif self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
-           n = 5
-        else 
-           n = 10
-        end        
-        #round to the nearest 0.05. 1/20 is .05
-        @tax_amount = (p * n/100 * 20).round/20.0
-        @tax_amount
+        puts self.product
+        Calculator.new(self)
+        # #p is price, n is tax amount, total is np/100 rounded to the nearest 0.05
+        # tax_rate = 0.10
+        # if @is_imported && @is_tax_exempt
+        #    n = 5
+        # elsif @is_imported && 
+        #     n = 15
+        # elsif self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
+        #    n = 5
+        # else 
+        #    n = 10
+        # end        
+        # #round to the nearest 0.05. 1/20 is .05
+        # @tax_amount = (p * n/100 * 20).round/20.0
+        # @tax_amount
     end
-
-    private 
 
     def is_food_product?
         exempt_items[:food].any? {|i| @product.include?(i)}
@@ -61,6 +62,10 @@ class LineItem
  
     def is_medical_product?
         exempt_items[:medical].any? {|i| @product.include?(i)}
+    end
+
+    def is_tax_exempt?
+        self.is_food_product? || self.is_book? || self.is_medical_product?
     end
  
     def is_imported?
