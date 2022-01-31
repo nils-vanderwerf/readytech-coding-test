@@ -8,6 +8,7 @@ class ShoppingBasket
 
     
     def read_data
+        puts @data
         @data
     end
 
