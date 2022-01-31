@@ -14,11 +14,11 @@ class LineItem
         @is_tax_exempt = self.is_tax_exempt?
         @is_imported = self.is_imported?
         @tax_amount = self.calculate_tax
-        @price_inc_tax = (@price + @tax_amount).round(2)
+        @price_inc_tax = @price + @tax_amount
         # add tax amount to toal sales amount for this class
         @@sales_tax += @tax_amount
         # add item cost to sum 
-        @@sum += (@quantity * @price_inc_tax).round(2)
+        @@sum += @quantity * @price_inc_tax
     end
 
     def self.all
@@ -35,21 +35,10 @@ class LineItem
 
     def calculate_tax
         puts self.product
-        Calculator.new(self)
-        # #p is price, n is tax amount, total is np/100 rounded to the nearest 0.05
-        # tax_rate = 0.10
-        # if @is_imported && @is_tax_exempt
-        #    n = 5
-        # elsif @is_imported && 
-        #     n = 15
-        # elsif self.is_imported? && self.is_food_product? || self.is_book? || self.is_medical_product?
-        #    n = 5
-        # else 
-        #    n = 10
-        # end        
-        # #round to the nearest 0.05. 1/20 is .05
-        # @tax_amount = (p * n/100 * 20).round/20.0
-        # @tax_amount
+        calculator = Calculator.new(self)
+        puts self.price
+        puts calculator.total_tax
+        calculator.total_tax
     end
 
     def is_food_product?
