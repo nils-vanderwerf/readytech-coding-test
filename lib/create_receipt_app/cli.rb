@@ -76,11 +76,11 @@ class CLI
         parsed_data = @shopping_basket.parsed_data
         # Create a new line item instance for each line item
         parsed_data.each do |line_item|
-            quantity = line_item[0].to_i
+            quantity = line_item[0]
             product = line_item[1]
-            price = line_item[2].to_f
+            price = line_item[2]
             item = LineItem.new(quantity, product, price)
-            @output << [item.quantity, item.product, item.price_inc_tax]
+            @output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
         end
         add_items_to_output
     end
@@ -90,8 +90,8 @@ class CLI
         sales_tax = LineItem.sales_tax
         # Line break
         @output << ["\n"]
-        @output << ["Sales Tax", sales_tax]
-        @output << ["Total", sum]
+        @output << ["Sales Taxes: #{"%.2f" % sales_tax}"]
+        @output << ["Total: #{"%.2f" % sum}"]
     end
 
     def generate_receipt

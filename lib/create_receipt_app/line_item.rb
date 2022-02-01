@@ -1,24 +1,30 @@
+require 'bigdecimal'
 class LineItem
     attr_reader :quantity, :product, :price, :price_inc_tax, :is_imported, :is_tax_exempt
      
-
     @@all = []
     @@sales_tax = 0
     @@sum = 0
 
-    def initialize quantity = nil, product, price
+    def initialize quantity = 1, product, price
         @@all << self
-        @quantity = quantity
+        @quantity = quantity.to_i
         @product = product
-        @price = price
+        @price = price.to_f
         @is_tax_exempt = self.is_tax_exempt?
         @is_imported = self.is_imported?
         @tax_amount = self.calculate_tax
         @price_inc_tax = @price + @tax_amount
-        # add tax amount to toal sales amount for this class
-        @@sales_tax += @tax_amount
-        # add item cost to sum 
-        @@sum += @quantity * @price_inc_tax
+    end
+
+    def calculate_tax
+        basic_tax = Tax.new(self).basic_tax
+        import_tax = Tax.new(self).import_tax
+        tax_amount = (basic_tax + import_tax).to_f
+        # Add recently calculated tax to total
+        @@sales_tax += tax_amount
+        @@sum += (tax_amount + @price).round(2)
+        tax_amount
     end
 
     def self.all
@@ -32,14 +38,6 @@ class LineItem
     def self.sum_all
         @@sum
     end 
-
-    def calculate_tax
-        puts self.product
-        calculator = Calculator.new(self)
-        puts self.price
-        puts calculator.total_tax
-        calculator.total_tax
-    end
 
     def is_food_product?
         exempt_items[:food].any? {|i| @product.include?(i)}
