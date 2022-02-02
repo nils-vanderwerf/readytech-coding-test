@@ -20,7 +20,6 @@ class CLI
     def user_input
         # Input is path of shopping cart file
          #reset line items class values to 0, so they don't keep incrementing
-        clear_line_items
         puts "Please enter the path for your shopping cart file"
         input = nil
         while input != "quit"
@@ -28,15 +27,6 @@ class CLI
             #Check if file path exists
             check_filepath(input)
         end
-    end
-
-    def clear_line_items
-        if !LineItem.all.empty?
-            LineItem.all.map do |instance| 
-                LineItem.find_by(product: instance.product).destroy 
-            end
-
-         end
     end
 
     def check_filepath(input)
@@ -98,6 +88,13 @@ class CLI
         receipt = Receipt.new(@output)
         receipt.csv_export
         receipt.output_display
+
+        reset_line_items
+    end
+
+    def reset_line_items
+       LineItem.destroy_all
+       puts LineItem.all
     end
 
 end

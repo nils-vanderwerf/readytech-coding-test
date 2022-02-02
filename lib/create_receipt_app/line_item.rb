@@ -1,6 +1,6 @@
-require 'bigdecimal'
 class LineItem
     attr_reader :quantity, :product, :price, :price_inc_tax, :is_imported, :is_tax_exempt
+    attr_accessor :all, :sum, :sales_tax
      
     @@all = []
     @@sales_tax = 0
@@ -65,5 +65,12 @@ class LineItem
             books: ["book"],
             medical: ["packet of headache pills"]
         }
+    end
+
+    #reset everything
+    def self.destroy_all
+        all.clear
+        @@sum = 0
+        @@sales_tax = 0
     end
 end
