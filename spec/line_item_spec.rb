@@ -11,7 +11,7 @@ RSpec.describe LineItem do
         price = line_item[2].to_f
         item = LineItem.new(quantity, product, price)
 
-        it  "adds new line items  based on data from the first input file" do
+        it "adds new line items based on data from the first input file" do
             expect(item).to have_attributes(:quantity => line_item[0].to_i, :product => line_item[1], :price => line_item[2].to_f)
         end
     end
@@ -22,7 +22,7 @@ RSpec.describe LineItem do
         price = line_item[2].to_f
         item = LineItem.new(quantity, product, price)
 
-        it  "adds new line items  based on data from the second input file" do
+        it  "adds new line items based on data from the second input file" do
             expect(item).to have_attributes(:quantity => line_item[0].to_i, :product => line_item[1], :price => line_item[2].to_f)
         end
     end
@@ -33,14 +33,10 @@ RSpec.describe LineItem do
         price = line_item[2].to_f
         item = LineItem.new(quantity, product, price)
 
-        it  "adds new line items  based on data from the third input file" do
+        it "adds new line items based on data from the third input file" do
             expect(item).to have_attributes(:quantity => line_item[0].to_i, :product => line_item[1], :price => line_item[2].to_f)
         end
     end
-
-     LineItem.all.each do |line|
-        puts line.product
-     end
 end
 
 # TODO

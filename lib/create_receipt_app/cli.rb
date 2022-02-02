@@ -40,9 +40,12 @@ class CLI
             @shopping_basket = ShoppingBasket.new(path)
             confirm_order
         elsif input != 'quit'
-            @stdout.puts "Oops! We couldn't find this file. Please try again."
-            user_input
+            retry_input
         end
+    end
+
+    def retry_input
+        @stdout.puts "Oops! We couldn't find this file. Please try again."
     end
 
     def confirm_order
