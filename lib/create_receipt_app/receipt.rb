@@ -4,10 +4,11 @@ class Receipt
     attr_accessor :items
     attr_reader :order
 
-    def initialize(order)
+    def initialize(order, stdout=STDOUT)
         # Method CSV.parse returns the entire CSV data, drops header
         @order = order
         items = []
+        @stdout = stdout
     end
 
     def csv_export
@@ -31,9 +32,9 @@ class Receipt
     def output_display
         @order.each do |row|
             if row.include?("Sales Tax") || row.include?("Total")
-                puts row.join(": ")
+                @stdout.puts row.join(": ")
             else 
-                puts row.join(", ")
+                @stdout.puts row.join(", ")
             end
         end
     end    

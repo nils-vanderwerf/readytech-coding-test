@@ -2,63 +2,65 @@ class CLI
 
     attr_accessor :shopping_basket, :output
 
-    def initialize
+    def initialize(stdout=STDOUT)
+        @stdout = stdout
         @shopping_basket = []
         @output = []
     end 
 
     def call
-        puts ""
-        puts "======================"
-        puts ""
-        puts "WELCOME"
-        puts "Let us create a receipt for your shopping cart"
-        puts ""
+        @stdout.puts ""
+        @stdout.puts "======================"
+        @stdout.puts ""
+        @stdout.puts "WELCOME"
+        @stdout.puts "Let us create a receipt for your shopping cart"
+        @stdout.puts ""
         user_input
-    end
+    end 
 
     def user_input
         # Input is path of shopping cart file
          #reset line items class values to 0, so they don't keep incrementing
-        puts "Please enter the path for your shopping cart file"
+        @stdout.puts "Please enter the path for your shopping cart file"
         input = nil
         while input != "quit"
             input = gets.strip
             #Check if file path exists
             check_filepath(input)
         end
+        exit_program
     end
 
     def check_filepath(input)
         path = input
         if File.exist?(path)
-            puts ""
-            puts "File Found"
-            puts ""
+            @stdout.puts ""
+            @stdout.puts "File Found"
+            @stdout.puts ""
             @shopping_basket = ShoppingBasket.new(path)
             confirm_order
         elsif input != 'quit'
-            puts "Oops! We couldn't find this file. Please try again."
+            @stdout.puts "Oops! We couldn't find this file. Please try again."
             user_input
         end
     end
 
     def confirm_order
-        puts @shopping_basket.read_data
+        @stdout.puts @shopping_basket.read_data
         confirmation = nil
-        puts "Confirm order? Y/N"
+        @stdout.puts "Confirm order? Y/N"
         confirmation = gets.strip
         if confirmation === "y" || confirmation === "Y"
-            puts "Loading receipt"
-            puts "............"
-            puts ""
+            @stdout.puts "Loading receipt"
+            @stdout.puts "............"
+            @stdout.puts ""
             read_line_items
             generate_receipt
         elsif confirmation === "n" || confirmation === "N"
-            puts "Ok, lets try again. Please enter the path for your shopping cart file"
+            @stdout.puts "Ok, lets try again. Please enter the path for your shopping cart file"
             user_input
         else 
-            puts "Invalid input"
+            @stdout.puts "Invalid input"
         end
     end
 
@@ -94,7 +96,9 @@ class CLI
 
     def reset_line_items
        LineItem.destroy_all
-       puts LineItem.all
+       @stdout.puts LineItem.all
     end
-
+    def exit_program
+        exit
+    end
 end
