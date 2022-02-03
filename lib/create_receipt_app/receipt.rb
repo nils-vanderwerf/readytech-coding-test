@@ -4,11 +4,11 @@ class Receipt
     attr_accessor :items
     attr_reader :order
 
-    def initialize(order, stdout=STDOUT)
+    def initialize(order)
         # Method CSV.parse returns the entire CSV data, drops header
         @order = order
         items = []
-        @stdout = stdout
+        @stdout = STDOUT
     end
 
     def csv_export

@@ -1,57 +1,82 @@
 require_relative '../lib/create_receipt_app'
 require_relative "../lib/create_receipt_app/line_item"
+require 'stringio'
 
 RSpec.describe CLI do
-    let(:stdin) { StringIO.new }
-    let(:stdout) { StringIO.new }
 
-    let(:cli) {described_class.new(stdout)}
+    let(:cli) {described_class.new}
 
     subject { cli }
 
-    describe "executing instructions from a file" do
+    context "executing instructions from a file" do
         it 'prints a Welcome message on cli executable' do
             expect {system %(./bin/create_receipt) }.to output(a_string_including('WELCOME'))
             .to_stdout_from_any_process
         end
 
         describe '#user_input' do
-            context 'with valid commands' do
-                it 'quits the application when user types quit' do
+            it 'quits the application when user types quit' do
                     cli.stub(:gets) {"quit"}
                     expect { cli.user_input }.to raise_error SystemExit
                 end
-            end
         end
 
         describe '#check_filepath' do
-            input1 ='input/order1.csv'
-            input2 = 'input/order2.csv'
-            input3 = 'input/order3.csv'
-            input4 = 'bad_file.csv'
+            let (:inputs) {['input/order1.csv', 'input/order2.csv', 'input/order3.csv' ]}
+            let (:input2) { 'input/order2.csv'}
+            let (:input3) { 'input/order3.csv'}
+            let (:bad_input) { 'bad_input.csv'}
             
-            let(:shopping_basket) {ShoppingBasket.new(input1)}
-            context 'with invalid commands' do
-                it 'successfully reads from input 1' do
-                    expect { File.read(input1) }.to_not raise_error(Errno::ENOENT)
-                end
-                it 'successfully reads from input 2' do
-                    expect { File.read(input2) }.to_not raise_error(Errno::ENOENT)
-                end
-                it 'successfully reads from input 3' do
-                    expect { File.read(input3) }.to_not raise_error(Errno::ENOENT)
+            it 'takes in filepath and checks the file' do
+                inputs.each do | path |
+                    new_shopping_cart = ShoppingBasket.new(path)
+                    expect { cli.check_filepath(path) }.to output(a_string_including(
+                        "\nFile Found\n"
+                    )).to_stdout
+                    expect {check_filepath(path)}.to receive(:confirm_order)
+                    expect {new_shopping_cart.data}.to eq(File.read(path).gsub(/\rn?/, ""))
                 end
             end
+            it 'raises an error if a bad file' do
+                expect { cli.check_filepath(bad_input) }.to receive(:retry_input)
+            end
+        end
 
-            context 'with invalid commands' do
-                it 'fails with bad file' do
-                    expect { File.read(input4) }.to raise_error(Errno::ENOENT)
-                    cli.stub(:gets) {input4}
-                    expect{cli.check_filepath(input4)}.to output(a_string_including("Oops! We couldn't find this file. Please try again.")).to_stdout_from_any_process
-            end
+        describe '#confirm_order' do
+
         end
     end
 end
+
+
+
+    #     describe '#check_filepath' do
+    #         input1 ='input/order1.csv'
+    #         input2 = 'input/order2.csv'
+    #         input3 = 'input/order3.csv'
+    #         input4 = 'bad_file.csv'
+            
+    #         let(:shopping_basket) {ShoppingBasket.new(input1)}
+    #         context 'with invalid commands' do
+    #             it 'successfully reads from input 1' do
+    #                 expect { File.read(input1) }.to_not raise_error(Errno::ENOENT)
+    #             end
+    #             it 'successfully reads from input 2' do
+    #                 expect { File.read(input2) }.to_not raise_error(Errno::ENOENT)
+    #             end
+    #             it 'successfully reads from input 3' do
+    #                 expect { File.read(input3) }.to_not raise_error(Errno::ENOENT)
+    #             end
+    #         end
+
+    #         context 'with invalid commands' do
+    #             it 'fails with bad file' do
+    #                 expect { File.read(input4) }.to raise_error(Errno::ENOENT)
+    #                 cli.stub(:gets) {input4}
+    #                 expect{cli.check_filepath(input4)}.to output(a_string_including("Oops! We couldn't find this file. Please try again.")).to_stdout_from_any_process
+    #         end
+    #     end
+    # end
 
     # describe '#check_filepath' do
     #     it "checks filepath and makes new shopping basket instance" do
@@ -59,7 +84,6 @@ end
     #         expect {cli.check_filepath("input/order1.csv") }.to 
     #     end
     # end
-end
 
 # # TODO
 # # - calculate tax test 1 for each case (e.g. imported / not imported etc.)
