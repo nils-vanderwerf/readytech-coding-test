@@ -1,3 +1,4 @@
+require 'bigdecimal'
 class Tax
     attr_reader :line_item
 
@@ -13,10 +14,16 @@ class Tax
     end
 
     def basic_tax
-        @tax_exempt ? 0 : ((@basic_tax_rate * @price) * @quantity / @round_off ).ceil.to_f * @round_off
+        tax_exempt = ((@basic_tax_rate * @price) * @quantity / @round_off ).round
+        @tax_exempt ? 0 : tax_exempt.round(2) * @round_off
     end
     
     def import_tax
-      @imported ? ((@import_rate * @price) * @quantity / @round_off).ceil.to_f * @round_off : 0
-    end 
+      is_imported = ((@import_rate * @price) * @quantity / @round_off).round * @round_off
+      @imported ? is_imported.round(2) : 0
+    end
+
+    def total
+        self.basic_tax + self.import_tax
+    end
 end

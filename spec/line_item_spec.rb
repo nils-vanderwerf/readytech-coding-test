@@ -39,7 +39,6 @@ RSpec.describe LineItem do
             end
         end
     end
-
     context 'determines whether an item is excempt from tax i.e is a book, food, or medical product' do
         it 'evaluates a book to be tax exempt' do
             book = LineItem.all.find{|x| x.product === 'book'}
@@ -69,17 +68,4 @@ RSpec.describe LineItem do
 # - calculate tax test 1 for each case (e.g. imported / not imported etc.)
 # - test a function that loads a file and does your logic and writes to another file and in the test, read from
 #   the output file and check it has the correct contents
-# - maybe a test for parsing user input and checking file exists  
-
-# def read_line_items
-#     parsed_data = @shopping_basket.parsed_data
-#     # Create a new line item instance for each line item
-#     parsed_data.each do |line_item|
-#         quantity = line_item[0].to_i
-#         product = line_item[1]
-#         price = line_item[2].to_f
-#         item = LineItem.new(quantity, product, price)
-#         @output << [item.quantity, item.product, item.price_inc_tax]
-#     end
-#     add_items_to_output
-# end              
+# - maybe a test for parsing user input and checking file exists 

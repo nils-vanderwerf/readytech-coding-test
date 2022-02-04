@@ -20,7 +20,7 @@ class LineItem
     def calculate_tax
         basic_tax = Tax.new(self).basic_tax
         import_tax = Tax.new(self).import_tax
-        tax_amount = (basic_tax + import_tax).to_f
+        tax_amount = Tax.new(self).total
         # Add recently calculated tax to total
         @@sales_tax += tax_amount
         @@sum += (tax_amount + @price).round(2)
