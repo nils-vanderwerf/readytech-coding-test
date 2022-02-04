@@ -1,4 +1,3 @@
-require 'bigdecimal'
 class Tax
     attr_reader :line_item
 

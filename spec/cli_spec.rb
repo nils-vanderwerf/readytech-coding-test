@@ -41,49 +41,9 @@ RSpec.describe CLI do
                 expect { cli.check_filepath(bad_input) }.to receive(:retry_input)
             end
         end
-
-        describe '#confirm_order' do
-
-        end
+        describe '#check_filepath' do
     end
 end
-
-
-
-    #     describe '#check_filepath' do
-    #         input1 ='input/order1.csv'
-    #         input2 = 'input/order2.csv'
-    #         input3 = 'input/order3.csv'
-    #         input4 = 'bad_file.csv'
-            
-    #         let(:shopping_basket) {ShoppingBasket.new(input1)}
-    #         context 'with invalid commands' do
-    #             it 'successfully reads from input 1' do
-    #                 expect { File.read(input1) }.to_not raise_error(Errno::ENOENT)
-    #             end
-    #             it 'successfully reads from input 2' do
-    #                 expect { File.read(input2) }.to_not raise_error(Errno::ENOENT)
-    #             end
-    #             it 'successfully reads from input 3' do
-    #                 expect { File.read(input3) }.to_not raise_error(Errno::ENOENT)
-    #             end
-    #         end
-
-    #         context 'with invalid commands' do
-    #             it 'fails with bad file' do
-    #                 expect { File.read(input4) }.to raise_error(Errno::ENOENT)
-    #                 cli.stub(:gets) {input4}
-    #                 expect{cli.check_filepath(input4)}.to output(a_string_including("Oops! We couldn't find this file. Please try again.")).to_stdout_from_any_process
-    #         end
-    #     end
-    # end
-
-    # describe '#check_filepath' do
-    #     it "checks filepath and makes new shopping basket instance" do
-    #         
-    #         expect {cli.check_filepath("input/order1.csv") }.to 
-    #     end
-    # end
 
 # # TODO
 # # - calculate tax test 1 for each case (e.g. imported / not imported etc.)

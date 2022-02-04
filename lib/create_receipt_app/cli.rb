@@ -1,8 +1,7 @@
 class CLI
     attr_accessor :shopping_basket, :output
 
-    def initialize(stdout=STDOUT)
-        @stdout = stdout
+    def initialize()
         @shopping_basket = []
         @output = []
     end 
@@ -75,6 +74,7 @@ class CLI
             price = line_item[2]
             item = LineItem.new(quantity, product, price)
             @output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
+            
         end
         add_items_to_output
     end
