@@ -20,15 +20,15 @@ RSpec.describe Tax do
             expect(Tax.new(headache).total).to eq(0)
         end
     end
-    context 'calculates tax amount for packet of imported chocolates' do
+    context 'calculates tax amount for imported box of chocolates' do
         it 'import and total tax as 0.5' do
             expect(Tax.new(imported_chocolates).basic_tax).to eq(0)
             expect(Tax.new(imported_chocolates).import_tax).to eq(0.5)
             expect(Tax.new(imported_chocolates).total).to eq(0.5)
         end
     end
-    context 'calculates tax amount for packet of imported chocolates' do
-        it 'evaluates total tax as 0' do
+    context 'calculates tax amount for  imported bottle of perfume' do
+        it 'evaluates import tax as 2.4, total tax as 7.15, ' do
             expect(Tax.new(perfume).basic_tax).to eq(4.75)
             expect(Tax.new(perfume).import_tax).to eq(2.4)
             expect(Tax.new(perfume).total).to eq(7.15)

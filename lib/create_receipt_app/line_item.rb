@@ -22,7 +22,7 @@ class LineItem
         import_tax = Tax.new(self).import_tax
         tax_amount = Tax.new(self).total
         # Add recently calculated tax to total
-        @@sales_tax += tax_amount
+        @@sales_tax += tax_amount.round(2)
         @@sum += (tax_amount + @price).round(2)
         tax_amount
     end
