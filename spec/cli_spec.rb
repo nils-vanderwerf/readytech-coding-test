@@ -41,7 +41,7 @@ RSpec.describe CLI do
                 expect { cli.check_filepath(bad_input) }.to receive(:retry_input)
             end
         end
-        describe '#check_filepath' do
+        
     end
 end
 

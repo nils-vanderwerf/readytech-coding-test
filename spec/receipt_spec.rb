@@ -19,12 +19,21 @@ RSpec.describe Receipt do
                 output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
             end
 
+            sum = LineItem.sum_all
+            sales_tax = LineItem.sales_tax
+            @output << ["\n"]
+            output << ["Sales Taxes: #{"%.2f" % sales_tax}"]
+            output << ["Total: #{"%.2f" % sum}"]
+
             receipt = Receipt.new(output)
             receipt.csv_export
 
             generated_file = File.read('output/generated_receipt.csv')
 
             expect(generated_file).to eq(test_receipt_1)
+            expect(receipt.output_display).to output([
+                ["1,book,12.49"], ["1,music cd,14.99"], ["1,chocolate bar,0.85"] ["\n"] ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
+            ]).to_stdout_from_any_process
         end
 
         it 'successfully exports the second input file' do
@@ -41,8 +50,14 @@ RSpec.describe Receipt do
                 product = line_item[1]
                 price = line_item[2]
                 item = LineItem.new(quantity, product, price)
-                output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
+                output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}", ]
+                
             end
+            sum = LineItem.sum_all
+            sales_tax = LineItem.sales_tax
+            output << ["\n"]
+            output << ["Sales Taxes: #{"%.2f" % sales_tax}"]
+            output << ["Total: #{"%.2f" % sum}"]
 
             receipt = Receipt.new(output)
             receipt.csv_export
@@ -50,9 +65,13 @@ RSpec.describe Receipt do
             generated_file = File.read('output/generated_receipt.csv')
 
             expect(generated_file).to eq(test_receipt_2)
+            expect(receipt.output_display).to eq([
+                ["1,imported box of chocolates,10"], ["1,imported bottle of perfume,47.5"], ["\n"] ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
+            ]).to_stdout_from_any_process
         end
         it 'successfully exports the third input file' do
             output = []
+            LineItem.destroy_all
             test_receipt_3 = File.read('output/test_receipt3.csv').gsub(/\r\n?/, "\n")
             content3 = "Quantity,Product,Price\n1,imported bottle of perfume,27.99\n1,bottle of perfume,18.99\n1,packet of headache pills,9.75\n1,box of imported chocolates,11.25"
             
@@ -66,15 +85,26 @@ RSpec.describe Receipt do
                 item = LineItem.new(quantity, product, price)
                 output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
             end
-        
+            
+            sum = LineItem.sum_all
+            sales_tax = LineItem.sales_tax
+            output << ["\n"]
+            output << ["Sales Taxes: #{"%.2f" % sales_tax}"]
+            output << ["Total: #{"%.2f" % sum}"]
+
             receipt = Receipt.new(output)
             receipt.csv_export
 
             generated_file = File.read('output/generated_receipt.csv')
-
-            expect(generated_file).to eq(test_receipt_3)
+            expect(receipt.csv_export).to output(test_receipt_3)
+            expect(receipt.output_display).to output([
+                ["1,imported bottle of perfume,27.99"], ["1,bottle of perfume,18.99"], ["1,packet of headache pills,9.75"], ["1,box of imported chocolates,11.25"], ["\n"], ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
+            ]).to_stdout_from_any_process
         end
+        
     end
     context 'Print to standard output' do
+        cli = CLI.new
+        
     end
 end
