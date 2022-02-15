@@ -29,13 +29,7 @@ RSpec.describe CLI do
                     baskets << ShoppingBasket.new(path)
                     cli.stub(:gets) {path}
                     expect(cli.check_filepath(path)).to be true
-                    if (cli.check_filepath(path))
-                        expect (cli.prints_file_found).to output("\n\n\File Found\n\n").to_stdout
-                    else
-                        expect(cli.call).to receive(:retry_input)
-                    end
                 end
-                puts "BASKETS #{baskets}"
             end
             it 'check filepath is false if bad file' do
                 expect(cli.check_filepath(bad_input)).to be false
