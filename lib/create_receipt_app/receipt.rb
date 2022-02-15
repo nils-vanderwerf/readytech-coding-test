@@ -8,7 +8,6 @@ class Receipt
         # Method CSV.parse returns the entire CSV data, drops header
         @order = order
         items = []
-        @stdout = STDOUT
     end
 
     def csv_export
@@ -22,9 +21,9 @@ class Receipt
     def output_display
         @order.each do |row|
             if row.include?("Sales Tax") || row.include?("Total")
-              @stdout.puts row.join(": ")
+              puts row.join(": ")
             else 
-                @stdout.puts row.join(", ")
+             puts row.join(", ")
             end
         end
     end    

@@ -21,15 +21,21 @@ RSpec.describe CLI do
 
         describe '#check_filepath' do
             let (:inputs) {['input/order1.csv', 'input/order2.csv', 'input/order3.csv' ]}
-            let (:input2) { 'input/order2.csv'}
-            let (:input3) { 'input/order3.csv'}
             let (:bad_input) { 'bad_input.csv'}
-
+            let (:baskets) {[]}
             
             it 'takes in filepath and checks the file' do
                 inputs.each do | path |
-                    expect(cli.check_filepath(path)).to be true 
+                    baskets << ShoppingBasket.new(path)
+                    cli.stub(:gets) {path}
+                    expect(cli.check_filepath(path)).to be true
+                    if (cli.check_filepath(path))
+                        expect (cli.prints_file_found).to output("\n\n\File Found\n\n").to_stdout
+                    else
+                        expect(cli.call).to receive(:retry_input)
+                    end
                 end
+                puts "BASKETS #{baskets}"
             end
             it 'check filepath is false if bad file' do
                 expect(cli.check_filepath(bad_input)).to be false

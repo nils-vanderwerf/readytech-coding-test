@@ -8,6 +8,7 @@ class CLI
     end 
 
     def call
+        reset_line_items
         puts ""
         puts "======================"
         puts ""
@@ -21,20 +22,18 @@ class CLI
         # Input is path of shopping cart file
          #reset line items class values to 0, so they don't keep incrementing
         puts "Please enter the path for your shopping cart file"
-        input = nil
-        while input != "quit"
-            input = gets.strip
-            #Check if file path exists
-            valid_file = check_filepath(input)
-            if valid_file
-                prints_file_found
-                create_shopping_basket(input)
-                confirm_order
-            else 
-                retry_input
-            end
+        input = gets.strip
+        #Check if file path exists
+        valid_file = check_filepath(input)
+        if valid_file
+            prints_file_found(input)
+            confirm_order
+        elsif input === "quit"
+            exit_program
+        else 
+            retry_input
+            user_input
         end
-        exit_program
     end
 
     def check_filepath(input)
@@ -45,18 +44,19 @@ class CLI
         end
     end
 
+    def prints_file_found(input)
+        puts "\n\n\File Found\n\n"
+        @shopping_basket = create_shopping_basket(input)
+        puts @shopping_basket.read_data
+    end
+
     def create_shopping_basket(path)
         @shopping_basket = ShoppingBasket.new(path)
     end
 
-    def prints_file_found
-        puts ""
-        puts "File Found"
-        puts ""
-    end
+  
 
-    def confirm_order
-        puts @shopping_basket.read_data
+    def confirm_order 
         confirmation = nil
         puts "Confirm order? Y/N"
         confirmation = gets.strip
@@ -65,17 +65,20 @@ class CLI
             puts "............"
             puts ""
             read_line_items
-            generate_receipt
+            generate_receipt(@output)
         elsif confirmation === "n" || confirmation === "N"
             puts "Ok, lets try again. Please enter the path for your shopping cart file"
             user_input
+        elsif confirmation === "quit"
+            exit_program
         else 
-            puts "Invalid input"
+            retry_input 
         end
+        confirm_order
     end
 
     def retry_input
-        puts "Oops! We couldn't find this file. Please try again."
+        @stdout = "Oops! We couldn't find this file. Please try again."
     end
 
     def read_line_items
@@ -101,8 +104,8 @@ class CLI
         @output << ["Total: #{"%.2f" % sum}"]
     end
 
-    def generate_receipt
-        receipt = Receipt.new(@output)
+    def generate_receipt(output)
+        receipt = Receipt.new(output)
         receipt.csv_export
         receipt.output_display
         reset_line_items
