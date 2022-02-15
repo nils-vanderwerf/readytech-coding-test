@@ -1,9 +1,10 @@
 class CLI
     attr_accessor :shopping_basket, :output
 
-    def initialize()
+    def initialize(stdout=STDOUT)
         @shopping_basket = []
         @output = []
+        @stdout = stdout
     end 
 
     def call
@@ -24,26 +25,34 @@ class CLI
         while input != "quit"
             input = gets.strip
             #Check if file path exists
-            check_filepath(input)
+            valid_file = check_filepath(input)
+            if valid_file
+                prints_file_found
+                create_shopping_basket(input)
+                confirm_order
+            else 
+                retry_input
+            end
         end
         exit_program
     end
 
     def check_filepath(input)
-        path = input
-        if File.exist?(path)
-            puts ""
-            puts "File Found"
-            puts ""
-            @shopping_basket = ShoppingBasket.new(path)
-            confirm_order
-        elsif input != 'quit'
-            retry_input
+        if File.exist?(input)
+            return true
+        else
+            return false
         end
     end
 
-    def retry_input
-        puts "Oops! We couldn't find this file. Please try again."
+    def create_shopping_basket(path)
+        @shopping_basket = ShoppingBasket.new(path)
+    end
+
+    def prints_file_found
+        puts ""
+        puts "File Found"
+        puts ""
     end
 
     def confirm_order
@@ -63,6 +72,10 @@ class CLI
         else 
             puts "Invalid input"
         end
+    end
+
+    def retry_input
+        puts "Oops! We couldn't find this file. Please try again."
     end
 
     def read_line_items
@@ -92,8 +105,8 @@ class CLI
         receipt = Receipt.new(@output)
         receipt.csv_export
         receipt.output_display
-
         reset_line_items
+        exit_program
     end
 
     def reset_line_items

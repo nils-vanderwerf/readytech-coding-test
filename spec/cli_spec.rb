@@ -3,10 +3,8 @@ require_relative "../lib/create_receipt_app/line_item"
 require 'stringio'
 
 RSpec.describe CLI do
-
-    let(:cli) {described_class.new}
-
-    subject { cli }
+    let(:stdout) { StringIO.new }
+    let(:cli) {CLI.new(stdout)}
 
     context "executing instructions from a file" do
         it 'prints a Welcome message on cli executable' do
@@ -16,7 +14,7 @@ RSpec.describe CLI do
 
         describe '#user_input' do
             it 'quits the application when user types quit' do
-                    cli.stub(:gets) {"quit"}
+                    cli.stub(:gets) {'quit'}
                     expect { cli.user_input }.to raise_error SystemExit
                 end
         end
@@ -26,19 +24,15 @@ RSpec.describe CLI do
             let (:input2) { 'input/order2.csv'}
             let (:input3) { 'input/order3.csv'}
             let (:bad_input) { 'bad_input.csv'}
+
             
             it 'takes in filepath and checks the file' do
                 inputs.each do | path |
-                    new_shopping_cart = ShoppingBasket.new(path)
-                    expect { cli.check_filepath(path) }.to output(a_string_including(
-                        "\nFile Found\n"
-                    )).to_stdout
-                    expect {check_filepath(path)}.to receive(:confirm_order)
-                    expect {new_shopping_cart.data}.to eq(File.read(path).gsub(/\rn?/, ""))
+                    expect(cli.check_filepath(path)).to be true 
                 end
             end
-            it 'raises an error if a bad file' do
-                expect { cli.check_filepath(bad_input) }.to receive(:retry_input)
+            it 'check filepath is false if bad file' do
+                expect(cli.check_filepath(bad_input)).to be false
             end
         end
         
