@@ -54,8 +54,6 @@ class CLI
         @shopping_basket = ShoppingBasket.new(path)
     end
 
-  
-
     def confirm_order 
         confirmation = nil
         puts "Confirm order? Y/N"

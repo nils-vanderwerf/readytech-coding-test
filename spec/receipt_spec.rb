@@ -18,7 +18,6 @@ RSpec.describe Receipt do
                 product = line_item[1]
                 price = line_item[2]
                 item = LineItem.new(quantity, product, price)
-                puts "QUANTITY: #{item.quantity}, PRODUCT: #{item.product}, PRICE: #{item.price_inc_tax}"
                 output << [item.quantity, item.product, "#{"%.2f" % item.price_inc_tax}"]
             end
 
@@ -34,9 +33,6 @@ RSpec.describe Receipt do
             generated_file = File.read('output/generated_receipt.csv').gsub(/\r\n?/, "\n")
 
             expect(generated_file).to eq(test_receipt_1)
-            expect(receipt.output_display).to output([
-                ["1,book,12.49"], ["1,music cd,14.99"], ["1,chocolate bar,0.85"] ["\n"] ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
-            ]).to_stdout_from_any_process
         end
 
         it 'successfully exports the second input file' do
@@ -69,9 +65,6 @@ RSpec.describe Receipt do
 
             generated_file = File.read('output/generated_receipt.csv').gsub(/\r\n?/, "\n")
             expect(generated_file).to eq(test_receipt_2)
-            expect(receipt.output_display).to eq([
-                ["1,imported box of chocolates,10"], ["1,imported bottle of perfume,47.5"], ["\n"] ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
-            ]).to_stdout_from_any_process
         end
         it 'successfully exports the third input file' do
             output = []
@@ -103,10 +96,7 @@ RSpec.describe Receipt do
             receipt.csv_export
 
             generated_file = File.read('output/generated_receipt.csv').gsub(/\r\n?/, "\n")
-            expect(receipt.csv_export).to output(test_receipt_3)
-            expect(receipt.output_display).to output([
-                ["1,imported bottle of perfume,27.99"], ["1,bottle of perfume,18.99"], ["1,packet of headache pills,9.75"], ["1,box of imported chocolates,11.25"], ["\n"], ["Sales Taxes: #{"%.2f" % sales_tax}"], ["Total: #{"%.2f" % sum}"]
-            ]).to_stdout_from_any_process
+            expect(generated_file).to eq(test_receipt_3)
         end
         
     end
